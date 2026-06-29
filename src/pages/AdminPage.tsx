@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import {
   adminData, getManageData, createTopic, createVideo, createQuestions,
   updateQuestion, deleteQuestion, createEmployee, updateEmployee, deleteEmployee,
-  type AdminDataOutputType, type GetManageDataOutputType,
+  type AdminDataOutputType, type GetManageDataOutputType, type AdminEmployee,
 } from '../lib/api';
 import Header from '../components/Header';
 import { Card } from '@/components/ui/card';
@@ -790,8 +790,8 @@ export default function AdminPage() {
 
   const filtered = employees.filter(e => e.name.includes(search) || e.role?.includes(search) || e.branch?.includes(search));
   const totalEmps = employees.length;
-  const totalVids = employees.reduce((s, e) => s + e.topics.reduce((ss, t) => ss + t.total, 0), 0);
-  const totalDone = employees.reduce((s, e) => s + e.topics.reduce((ss, t) => ss + t.completed, 0), 0);
+  const totalVids = employees.reduce((s, e) => s + e.topics.reduce((ss: number, t) => ss + t.total, 0), 0);
+  const totalDone = employees.reduce((s, e) => s + e.topics.reduce((ss: number, t) => ss + t.completed, 0), 0);
 
   return (
     <div className="min-h-screen bg-background">
