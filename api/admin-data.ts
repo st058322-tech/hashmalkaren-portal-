@@ -1,8 +1,8 @@
 ﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { findAll, TABLES, FIELDS, fStr, fLink } from './_airtable.js';
 
-const ADMIN_USER = process.env.ADMIN_USER || '׳׳¡׳×׳™';
-const ADMIN_PASS = process.env.ADMIN_PASS || '111';
+const ADMIN_USER = process.env.ADMIN_USER || 'admin';
+const ADMIN_PASS = process.env.ADMIN_PASS || 'admin123';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -55,4 +55,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ success: true, employees: result });
 }
+
 
