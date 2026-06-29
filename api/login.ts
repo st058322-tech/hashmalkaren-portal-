@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { findAll, TABLES, FIELDS, fStr, fLink } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { findAll, TABLES, FIELDS, fStr, fLink } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -16,7 +16,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   );
 
   if (!emp) {
-    return res.json({ success: false, error: 'שם או סיסמה שגויים' });
+    return res.json({ success: false, error: '׳©׳ ׳׳• ׳¡׳™׳¡׳׳” ׳©׳’׳•׳™׳™׳' });
   }
 
   return res.json({
@@ -30,3 +30,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     },
   });
 }
+

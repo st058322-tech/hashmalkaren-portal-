@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { findAll, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { findAll, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -15,7 +15,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       id: t.id,
       name: fStr(t, FIELDS.topics.name),
       description: fStr(t, FIELDS.topics.description),
-      status: fStr(t, FIELDS.topics.status) || 'פעיל',
+      status: fStr(t, FIELDS.topics.status) || '׳₪׳¢׳™׳',
     })),
     videos: videos.map(v => ({
       id: v.id,
@@ -24,8 +24,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       description: fStr(v, FIELDS.videos.description),
       videoUrl: fStr(v, FIELDS.videos.videoUrl),
       pdfUrl: fStr(v, FIELDS.videos.pdfUrl),
-      required: fStr(v, FIELDS.videos.required) || 'רשות',
-      status: fStr(v, FIELDS.videos.status) || 'פעיל',
+      required: fStr(v, FIELDS.videos.required) || '׳¨׳©׳•׳×',
+      status: fStr(v, FIELDS.videos.status) || '׳₪׳¢׳™׳',
       order: fNum(v, FIELDS.videos.order),
     })),
     questions: questions.map(q => ({
@@ -40,3 +40,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     })),
   });
 }
+

@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { bulkCreate, TABLES, FIELDS } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { bulkCreate, TABLES, FIELDS } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -29,3 +29,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   await bulkCreate(TABLES.questions, records);
   return res.json({ count: questions.length, success: true });
 }
+

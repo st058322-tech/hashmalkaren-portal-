@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { findAll, findOne, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { findAll, findOne, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -28,3 +28,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ topicName, questions });
 }
+

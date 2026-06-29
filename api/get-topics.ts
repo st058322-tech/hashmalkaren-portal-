@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { findAll, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { findAll, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -14,14 +14,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const completedVideoIds = new Set(
     progress
-      .filter(p => fStr(p, FIELDS.progress.status) === 'הושלם')
+      .filter(p => fStr(p, FIELDS.progress.status) === '׳”׳•׳©׳׳')
       .map(p => fLink(p, FIELDS.progress.videoId))
       .filter(Boolean)
   );
 
   const result = topics.map(topic => {
     const topicVideos = videos.filter(v => {
-      if (fStr(v, FIELDS.videos.status) === 'לא פעיל') return false;
+      if (fStr(v, FIELDS.videos.status) === '׳׳ ׳₪׳¢׳™׳') return false;
       return fLink(v, FIELDS.videos.topicId) === topic.id;
     });
 
@@ -36,3 +36,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ topics: result });
 }
+

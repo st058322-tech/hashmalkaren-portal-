@@ -1,7 +1,7 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { findAll, TABLES, FIELDS, fStr, fLink } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { findAll, TABLES, FIELDS, fStr, fLink } from './_airtable.js';
 
-const ADMIN_USER = process.env.ADMIN_USER || 'אסתי';
+const ADMIN_USER = process.env.ADMIN_USER || '׳׳¡׳×׳™';
 const ADMIN_PASS = process.env.ADMIN_PASS || '111';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -24,14 +24,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     const empProgress = progress.filter(p => fLink(p, FIELDS.progress.employeeId) === emp.id);
     const completedIds = new Set(
       empProgress
-        .filter(p => fStr(p, FIELDS.progress.status) === 'הושלם')
+        .filter(p => fStr(p, FIELDS.progress.status) === '׳”׳•׳©׳׳')
         .map(p => fLink(p, FIELDS.progress.videoId))
         .filter(Boolean)
     );
 
     const topicData = topics.map(topic => {
       const topicVids = videos.filter(v => {
-        if (fStr(v, FIELDS.videos.status) === 'לא פעיל') return false;
+        if (fStr(v, FIELDS.videos.status) === '׳׳ ׳₪׳¢׳™׳') return false;
         return fLink(v, FIELDS.videos.topicId) === topic.id;
       });
       return {
@@ -55,3 +55,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ success: true, employees: result });
 }
+

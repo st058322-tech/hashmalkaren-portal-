@@ -1,5 +1,5 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { createRecord, updateRecord, TABLES, FIELDS } from './_airtable';
+﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { createRecord, updateRecord, TABLES, FIELDS } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
@@ -15,14 +15,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (progressId) {
     await updateRecord(TABLES.progress, progressId, {
-      [FIELDS.progress.status]: 'הושלם',
+      [FIELDS.progress.status]: '׳”׳•׳©׳׳',
       [FIELDS.progress.completedDate]: today,
     });
   } else {
     await createRecord(TABLES.progress, {
       [FIELDS.progress.employeeId]: [employeeId],
       [FIELDS.progress.videoId]: [videoId],
-      [FIELDS.progress.status]: 'הושלם',
+      [FIELDS.progress.status]: '׳”׳•׳©׳׳',
       [FIELDS.progress.startDate]: today,
       [FIELDS.progress.completedDate]: today,
     });
@@ -30,3 +30,4 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ success: true });
 }
+
