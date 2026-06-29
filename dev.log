@@ -1,0 +1,96 @@
+
+> onboarding-portal@1.0.0 dev
+> vite
+
+[32m✓ Airtable connected — using real data[0m
+
+  [32m[1mVITE[22m v6.4.3[39m  [2mready in [0m[1m721[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+[2m  [32m➜[39m  [1mNetwork[22m[2m: use [22m[1m--host[22m[2m to expose[22m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[API error] login [TypeError: fetch failed] {
+  [cause]: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 54.147.31.34:443, timeout: 10000ms)
+      at onConnectTimeout (node:internal/deps/undici/undici:1991:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1957:35)
+      at process.processImmediate (node:internal/timers:504:21) {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+[2m22:11:26[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[32m✓ Airtable connected — using real data[0m
+[2m22:11:26[22m [36m[1m[vite][22m[39m server restarted.
+[API error] get-topics [TypeError: fetch failed] {
+  [cause]: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 54.147.31.34:443, timeout: 10000ms)
+      at onConnectTimeout (node:internal/deps/undici/undici:1991:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1957:35)
+      at process.processImmediate (node:internal/timers:504:21) {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+[API error] get-topics [TypeError: fetch failed] {
+  [cause]: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 54.147.31.34:443, timeout: 10000ms)
+      at onConnectTimeout (node:internal/deps/undici/undici:1991:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1957:35)
+      at process.processImmediate (node:internal/timers:504:21) {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+[2m22:11:44[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/AdminPage.tsx, /src/pages/LoginPage.tsx, /src/pages/QuizPage.tsx, /src/pages/TopicPage.tsx, /src/pages/HomePage.tsx[22m
+[2m22:11:51[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/AdminPage.tsx, /src/index.css[22m
+[2m22:12:04[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/AdminPage.tsx, /src/index.css[22m
+[2m22:15:52[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/AdminPage.tsx, /src/index.css[22m
+[2m22:20:01[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/AdminPage.tsx, /src/index.css[22m
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[API error] mark-complete Error: Airtable 422: {"error":{"type":"INVALID_VALUE_FOR_COLUMN","message":"Value is not an array of record IDs."}}
+    at airFetch (file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:75:22)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at async file:///C:/Users/user1/Downloads/%E2%80%8F%E2%80%8F%D7%AA%D7%99%D7%A7%D7%99%D7%94%20%D7%97%D7%93%D7%A9%D7%94/onboarding-portal/node_modules/.vite-temp/vite.config.ts.timestamp-1782673886568-5f9bbdf8a5ae88.mjs:222:19
+[2m22:26:15[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[32m✓ Airtable connected — using real data[0m
+[2m22:26:15[22m [36m[1m[vite][22m[39m server restarted.
+[2m22:26:20[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+[32m✓ Airtable connected — using real data[0m
+[2m22:26:20[22m [36m[1m[vite][22m[39m server restarted.
+[2m22:26:25[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/index.css, /src/pages/LoginPage.tsx, /src/pages/QuizPage.tsx, /src/pages/TopicPage.tsx, /src/pages/HomePage.tsx, /src/pages/AdminPage.tsx[22m
+[2m22:26:32[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/HomePage.tsx, /src/index.css[22m
+[API error] get-topic-videos [TypeError: fetch failed] {
+  [cause]: ConnectTimeoutError: Connect Timeout Error (attempted addresses: 34.226.28.153:443, timeout: 10000ms)
+      at onConnectTimeout (node:internal/deps/undici/undici:1991:23)
+      at Immediate._onImmediate (node:internal/deps/undici/undici:1957:35)
+      at process.processImmediate (node:internal/timers:504:21) {
+    code: 'UND_ERR_CONNECT_TIMEOUT'
+  }
+}
+[2m22:28:49[22m [36m[1m[vite][22m[39m [90m[2m(client)[22m[39m [32mhmr update [39m[2m/src/pages/TopicPage.tsx, /src/index.css[22m
