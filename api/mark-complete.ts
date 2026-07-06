@@ -1,4 +1,4 @@
-﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createRecord, updateRecord, TABLES, FIELDS } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -30,5 +30,3 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ success: true });
 }
-
-
