@@ -15,14 +15,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   if (progressId) {
     await updateRecord(TABLES.progress, progressId, {
-      [FIELDS.progress.status]: '׳”׳•׳©׳׳',
+      [FIELDS.progress.status]: 'הושלם',
       [FIELDS.progress.completedDate]: today,
     });
   } else {
     await createRecord(TABLES.progress, {
       [FIELDS.progress.employeeId]: [employeeId],
       [FIELDS.progress.videoId]: [videoId],
-      [FIELDS.progress.status]: '׳”׳•׳©׳׳',
+      [FIELDS.progress.status]: 'הושלם',
       [FIELDS.progress.startDate]: today,
       [FIELDS.progress.completedDate]: today,
     });
@@ -30,4 +30,5 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   return res.json({ success: true });
 }
+
 
