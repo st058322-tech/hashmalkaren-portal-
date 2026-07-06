@@ -90,7 +90,37 @@ export default function VideoEmbed({ url, onWatchComplete, compact }: Props) {
   }
 
   const showManualConfirm = onWatchComplete && !watchedRef.current && !manualConfirmed &&
-    (result.type === 'drive' || result.type === 'vimeo') && elapsed >= 10;
+    (result.type === 'drive' || result.type === 'vimeo') && elapsed >= 5;
+
+  // Google Drive blocks iframe embedding — show open button + manual confirm
+  if (result.type === 'drive') {
+    return (
+      <div className="space-y-3">
+        <div className="w-full rounded-xl bg-secondary/30 border border-border flex flex-col items-center justify-center gap-3 py-8 px-4 text-center">
+          <div className="text-3xl">🎬</div>
+          <p className="text-sm font-semibold text-foreground">סרטון Google Drive</p>
+          <p className="text-xs text-muted-foreground">לחצי לצפייה בחלון חדש, ואחרי הצפייה חזרי ולחצי "סיימתי"</p>
+          <a
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 py-2.5 px-6 rounded-xl bg-primary text-primary-foreground font-bold text-sm hover:bg-primary/90 transition-colors"
+          >
+            ▶ פתח וצפה בסרטון
+          </a>
+        </div>
+        {showManualConfirm && (
+          <button
+            onClick={() => { setManualConfirmed(true); fireComplete(); }}
+            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-primary text-primary font-bold text-sm hover:bg-primary/5 transition-colors"
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            סיימתי לצפות בסרטון
+          </button>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-3">
@@ -103,16 +133,6 @@ export default function VideoEmbed({ url, onWatchComplete, compact }: Props) {
           title="סרטון שיעור"
         />
       </div>
-      {result.type === 'drive' && (
-        <a
-          href={url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-border text-muted-foreground text-xs hover:bg-secondary/40 transition-colors"
-        >
-          ▶ פתח סרטון ב-Google Drive
-        </a>
-      )}
       {showManualConfirm && (
         <button
           onClick={() => { setManualConfirmed(true); fireComplete(); }}
