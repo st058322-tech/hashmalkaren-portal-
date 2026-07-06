@@ -53,7 +53,10 @@ function ActiveVideoCard({ video, topicId, onCompleted }: { video: Video; topicI
       setMarkedDone(true);
       toast.success('צפייה סומנה בהצלחה!');
       onCompleted();
-    } catch { toast.error('שגיאה בסימון'); }
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error('שגיאה בסימון: ' + msg);
+    }
     finally { setCompleting(false); }
   };
 
