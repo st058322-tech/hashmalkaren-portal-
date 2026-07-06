@@ -1,15 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { findAll, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable.js';
+import { findAll, TABLES, FIELDS, fStr, fLink } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') return res.status(405).end();
 
   const { employeeId } = req.body as { employeeId: string };
 
-  const [topics, videos, progress] = await Promise.all([
+  const [topics, videos, progress, questions] = await Promise.all([
     findAll(TABLES.topics),
     findAll(TABLES.videos),
     findAll(TABLES.progress, `{${FIELDS.progress.employeeId}} = "${employeeId}"`),
+    findAll(TABLES.questions),
   ]);
 
   const completedVideoIds = new Set(
@@ -25,7 +26,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return fLink(v, FIELDS.videos.topicId) === topic.id;
     });
 
-    const questionCount = 0;
+    const questionCount = questions.filter(q => fLink(q, FIELDS.questions.topicId) === topic.id).length;
 
     return {
       id: topic.id,
