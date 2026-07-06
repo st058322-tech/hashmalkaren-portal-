@@ -6,12 +6,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { employeeId } = req.body as { employeeId: string };
 
-  const [topics, videos, progress, questions] = await Promise.all([
+  const [topics, videos, allProgress, questions] = await Promise.all([
     findAll(TABLES.topics),
     findAll(TABLES.videos),
-    findAll(TABLES.progress, `{${FIELDS.progress.employeeId}} = "${employeeId}"`),
+    findAll(TABLES.progress),
     findAll(TABLES.questions),
   ]);
+
+  // Filter progress to this employee in JS (Airtable formula doesn't work on linked record fields)
+  const progress = allProgress.filter(p => {
+    const linked = p.fields[FIELDS.progress.employeeId];
+    return Array.isArray(linked) ? linked.includes(employeeId) : String(linked ?? '') === employeeId;
+  });
 
   const completedVideoIds = new Set(
     progress
@@ -23,10 +29,14 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   const result = topics.map(topic => {
     const topicVideos = videos.filter(v => {
       if (fStr(v, FIELDS.videos.status) === 'לא פעיל') return false;
-      return fLink(v, FIELDS.videos.topicId) === topic.id;
+      const linked = v.fields[FIELDS.videos.topicId];
+      return Array.isArray(linked) ? linked.includes(topic.id) : String(linked ?? '') === topic.id;
     });
 
-    const questionCount = questions.filter(q => fLink(q, FIELDS.questions.topicId) === topic.id).length;
+    const questionCount = questions.filter(q => {
+      const linked = q.fields[FIELDS.questions.topicId];
+      return Array.isArray(linked) ? linked.includes(topic.id) : String(linked ?? '') === topic.id;
+    }).length;
 
     return {
       id: topic.id,
