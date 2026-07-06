@@ -1,4 +1,4 @@
-﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { findAll, TABLES, FIELDS, fStr, fLink, fNum } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -14,16 +14,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const completedVideoIds = new Set(
     progress
-      .filter(p => fStr(p, FIELDS.progress.status) === '׳”׳•׳©׳׳')
+      .filter(p => fStr(p, FIELDS.progress.status) === 'הושלם')
       .map(p => fLink(p, FIELDS.progress.videoId))
       .filter(Boolean)
   );
 
   const result = topics.map(topic => {
     const topicVideos = videos.filter(v => {
-      if (fStr(v, FIELDS.videos.status) === '׳׳ ׳₪׳¢׳™׳') return false;
+      if (fStr(v, FIELDS.videos.status) === 'לא פעיל') return false;
       return fLink(v, FIELDS.videos.topicId) === topic.id;
     });
+
+    const questionCount = 0;
 
     return {
       id: topic.id,
@@ -31,9 +33,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       description: fStr(topic, FIELDS.topics.description),
       totalVideos: topicVideos.length,
       completedVideos: topicVideos.filter(v => completedVideoIds.has(v.id)).length,
+      questionCount,
     };
   });
 
   return res.json({ topics: result });
 }
-
