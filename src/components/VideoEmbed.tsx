@@ -103,6 +103,16 @@ export default function VideoEmbed({ url, onWatchComplete, compact }: Props) {
           title="סרטון שיעור"
         />
       </div>
+      {result.type === 'drive' && (
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="w-full flex items-center justify-center gap-2 py-2 rounded-xl border border-border text-muted-foreground text-xs hover:bg-secondary/40 transition-colors"
+        >
+          ▶ פתח סרטון ב-Google Drive
+        </a>
+      )}
       {showManualConfirm && (
         <button
           onClick={() => { setManualConfirmed(true); fireComplete(); }}
