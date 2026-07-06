@@ -1,4 +1,4 @@
-﻿import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { createRecord, TABLES, FIELDS } from './_airtable.js';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
@@ -22,10 +22,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     [FIELDS.videos.videoUrl]: videoUrl || '',
     [FIELDS.videos.pdfUrl]: pdfUrl || '',
     [FIELDS.videos.order]: order || 1,
-    [FIELDS.videos.required]: required || '׳—׳•׳‘׳”',
-    [FIELDS.videos.status]: status || '׳₪׳¢׳™׳',
+    [FIELDS.videos.required]: required || 'חובה',
+    [FIELDS.videos.status]: status || 'פעיל',
   });
 
   return res.json({ id: record.id, success: true });
 }
-
