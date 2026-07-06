@@ -13,20 +13,24 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const today = new Date().toISOString().split('T')[0];
 
-  if (progressId) {
-    await updateRecord(TABLES.progress, progressId, {
-      [FIELDS.progress.status]: 'הושלם',
-      [FIELDS.progress.completedDate]: today,
-    });
-  } else {
-    await createRecord(TABLES.progress, {
-      [FIELDS.progress.employeeId]: [employeeId],
-      [FIELDS.progress.videoId]: [videoId],
-      [FIELDS.progress.status]: 'הושלם',
-      [FIELDS.progress.startDate]: today,
-      [FIELDS.progress.completedDate]: today,
-    });
+  try {
+    if (progressId) {
+      await updateRecord(TABLES.progress, progressId, {
+        [FIELDS.progress.status]: 'הושלם',
+        [FIELDS.progress.completedDate]: today,
+      });
+    } else {
+      await createRecord(TABLES.progress, {
+        [FIELDS.progress.employeeId]: [employeeId],
+        [FIELDS.progress.videoId]: [videoId],
+        [FIELDS.progress.status]: 'הושלם',
+        [FIELDS.progress.startDate]: today,
+        [FIELDS.progress.completedDate]: today,
+      });
+    }
+    return res.json({ success: true });
+  } catch (err: unknown) {
+    const msg = err instanceof Error ? err.message : String(err);
+    return res.status(500).json({ success: false, error: msg });
   }
-
-  return res.json({ success: true });
 }
