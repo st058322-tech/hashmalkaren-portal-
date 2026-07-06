@@ -6,32 +6,36 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   const { topicId, employeeId } = req.body as { topicId: string; employeeId: string };
 
-  const [allVideos, progress] = await Promise.all([
+  const [allVideos, allProgress] = await Promise.all([
     findAll(TABLES.videos),
-    findAll(TABLES.progress, `{${FIELDS.progress.employeeId}} = "${employeeId}"`),
+    findAll(TABLES.progress),
   ]);
+
+  // Filter progress to this employee in JS (Airtable formula doesn't work on linked record fields)
+  const progress = allProgress.filter(p => {
+    const linked = p.fields[FIELDS.progress.employeeId];
+    return Array.isArray(linked) ? linked.includes(employeeId) : String(linked ?? '') === employeeId;
+  });
 
   const videos = allVideos.filter(v => {
     if (fStr(v, FIELDS.videos.status) === 'לא פעיל') return false;
-    return fLink(v, FIELDS.videos.topicId) === topicId;
+    const linked = v.fields[FIELDS.videos.topicId];
+    return Array.isArray(linked) ? linked.includes(topicId) : String(linked ?? '') === topicId;
   });
-
-  const progressByVideo = new Map<string, { status: string; id: string }>();
-  for (const p of progress) {
-    const vid = fLink(p, FIELDS.progress.videoId);
-    if (vid) progressByVideo.set(vid, { status: fStr(p, FIELDS.progress.status) || 'טרם התחיל', id: p.id });
-  }
 
   const sorted = [...videos].sort((a, b) => fNum(a, FIELDS.videos.order) - fNum(b, FIELDS.videos.order));
 
-  const result = sorted.map((v, index) => {
-    const prog = progressByVideo.get(v.id);
-    const status = prog?.status || 'טרם התחיל';
-    let locked = false;
-    if (index > 0) {
-      const prevStatus = progressByVideo.get(sorted[index - 1].id)?.status || 'טרם התחיל';
-      locked = prevStatus !== 'הושלם';
-    }
+  let prevDone = true;
+  const result = sorted.map(v => {
+    const prog = progress.find(p => {
+      const linked = p.fields[FIELDS.progress.videoId];
+      return Array.isArray(linked) ? linked.includes(v.id) : fLink(p, FIELDS.progress.videoId) === v.id;
+    });
+    const status = prog ? fStr(prog, FIELDS.progress.status) : 'טרם התחיל';
+    const done = status === 'הושלם';
+    const locked = !prevDone;
+    if (done) prevDone = true;
+    else if (!locked) prevDone = false;
 
     return {
       id: v.id,
