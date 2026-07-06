@@ -1,5 +1,3 @@
-// Replaces zite-endpoints-sdk — typed fetch wrappers to /api/* Vercel functions
-
 async function post<T>(path: string, body: unknown): Promise<T> {
   const res = await fetch(path, {
     method: 'POST',
@@ -75,7 +73,7 @@ export type ManageTopic = { id: string; name: string; description: string; statu
 export type ManageVideo = { id: string; name: string; topicId: string; description: string; videoUrl: string; pdfUrl: string; required: string; status: string; order: number };
 export type ManageQuestion = { id: string; topicId: string; question: string; answer1: string; answer2: string; answer3: string; answer4: string; correctAnswer: number };
 
-// ── Output types (mirrors zite-endpoints-sdk) ────────────
+// ── Output types ────────────────────────────────────────
 
 export type GetTopicsOutputType = { topics: Topic[] };
 export type GetTopicVideosOutputType = { videos: Video[] };
@@ -116,16 +114,16 @@ export const createQuestions = (input: { questions: Array<{ topicId: string; que
   post<{ count: number; success: boolean }>('/api/create-questions', input);
 
 export const updateQuestion = (input: { id: string; question: string; answer1: string; answer2: string; answer3: string; answer4?: string; correctAnswer: number }) =>
-  post<{ success: boolean }>('/api/update-question', input);
-
-export const updateEmployee = (input: { id: string; name?: string; password?: string; branch?: string; role?: string }) =>
-  post<{ success: boolean }>('/api/update-employee', input);
+  post<{ success: boolean }>('/api/manage-question', { action: 'update', ...input });
 
 export const deleteQuestion = (id: string) =>
-  post<{ success: boolean }>('/api/delete-question', { id });
+  post<{ success: boolean }>('/api/manage-question', { action: 'delete', id });
 
 export const createEmployee = (input: { name: string; password: string; branch?: string; role?: string }) =>
-  post<{ id: string; success: boolean }>('/api/create-employee', input);
+  post<{ id: string; success: boolean }>('/api/manage-employee', { action: 'create', ...input });
+
+export const updateEmployee = (input: { id: string; name?: string; password?: string; branch?: string; role?: string }) =>
+  post<{ success: boolean }>('/api/manage-employee', { action: 'update', ...input });
 
 export const deleteEmployee = (id: string) =>
-  post<{ success: boolean }>('/api/delete-employee', { id });
+  post<{ success: boolean }>('/api/manage-employee', { action: 'delete', id });
