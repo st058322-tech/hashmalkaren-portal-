@@ -98,8 +98,9 @@ export default function VideoEmbed({ url, onWatchComplete, compact }: Props) {
         <iframe
           src={result.embedUrl}
           className={`w-full ${aspectClass}`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allow={result.type === 'drive' ? 'autoplay' : 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'}
           allowFullScreen
+          referrerPolicy="no-referrer-when-downgrade"
           title="סרטון שיעור"
         />
       </div>
