@@ -24,7 +24,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         [FIELDS.progress.employeeId]: [employeeId],
         [FIELDS.progress.videoId]: [videoId],
         [FIELDS.progress.status]: 'הושלם',
-        [FIELDS.progress.startDate]: today,
         [FIELDS.progress.completedDate]: today,
       });
     }
