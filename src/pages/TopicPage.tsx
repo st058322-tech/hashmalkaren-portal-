@@ -219,9 +219,13 @@ export default function TopicPage() {
   useEffect(() => {
     if (!emp) { navigate('/'); return; }
     loadVideos();
-    const onVisible = () => { if (!document.hidden) loadVideos(); };
-    document.addEventListener('visibilitychange', onVisible);
-    return () => document.removeEventListener('visibilitychange', onVisible);
+    const onRefresh = () => { if (!document.hidden) loadVideos(); };
+    document.addEventListener('visibilitychange', onRefresh);
+    window.addEventListener('focus', onRefresh);
+    return () => {
+      document.removeEventListener('visibilitychange', onRefresh);
+      window.removeEventListener('focus', onRefresh);
+    };
   }, []);
 
   if (!emp) return null;
