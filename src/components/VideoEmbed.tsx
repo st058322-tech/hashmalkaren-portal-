@@ -80,8 +80,16 @@ export default function VideoEmbed({ url, onWatchComplete, compact }: Props) {
 
   if (result.type === 'raw' && result.embedUrl.match(/\.(mp4|webm|ogg)(\?|$)/i)) {
     return (
-      <div className="w-full rounded-xl overflow-hidden bg-black">
-        <video ref={videoRef} controls className={`w-full ${aspectClass}`} preload="metadata">
+      <div className="w-full rounded-xl overflow-hidden bg-black" onContextMenu={e => e.preventDefault()}>
+        <video
+          ref={videoRef}
+          controls
+          controlsList="nodownload nofullscreen"
+          disablePictureInPicture
+          className={`w-full ${aspectClass}`}
+          preload="metadata"
+          onContextMenu={e => e.preventDefault()}
+        >
           <source src={result.embedUrl} />
           הדפדפן שלך לא תומך בהצגת וידאו
         </video>
@@ -94,7 +102,7 @@ export default function VideoEmbed({ url, onWatchComplete, compact }: Props) {
 
   return (
     <div className="space-y-3">
-      <div className="w-full rounded-xl overflow-hidden bg-black">
+      <div className="w-full rounded-xl overflow-hidden bg-black relative" onContextMenu={e => e.preventDefault()}>
         <iframe
           src={result.embedUrl}
           className={`w-full ${aspectClass}`}
