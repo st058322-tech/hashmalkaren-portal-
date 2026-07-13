@@ -61,9 +61,12 @@ export type AdminEmployee = {
   role: string;
   status: string;
   topics: Array<{
+    topicId: string;
     name: string;
     total: number;
     completed: number;
+    completedVideos: { id: string; name: string }[];
+    missingVideos: { id: string; name: string }[];
     completedNames: string[];
     missingNames: string[];
   }>;
