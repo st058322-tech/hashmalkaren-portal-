@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowRight, CheckCircle2, Star, Lock, FileText, Loader2, ClipboardCheck, XCircle, ChevronLeft } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Star, Lock, FileText, Loader2, ClipboardCheck, XCircle, ChevronLeft, RefreshCw } from 'lucide-react';
 import { toast } from 'sonner';
 import { getAttemptsByEmployee, type QuizAttempt, type QuizAnswer } from '../lib/quizResults';
 
