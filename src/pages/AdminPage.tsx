@@ -440,8 +440,8 @@ function VideosTab({ videos, topics, onRefresh }: { videos: VideoItem[]; topics:
   const handleCreate = async () => {
     if (!name || !topic) return;
     setSaving(true);
-    try { await createVideo({ topicId: topic, name, description: desc, videoUrl: url, pdfUrl: pdf, order: Number(order)||1, required }); toast.success('סרטון נוצר'); setName(''); setTopic(''); setDesc(''); setUrl(''); setPdf(''); setOrder('1'); setRequired('חובה'); setShowForm(false); onRefresh(); }
-    catch { toast.error('שגיאה ביצירה'); } finally { setSaving(false); }
+    try { await createVideo({ topicId: topic, name, description: desc, videoUrl: url, pdfUrl: pdf, order: Number(order)||1, required, status: 'פעיל' }); toast.success('סרטון נוצר'); setName(''); setTopic(''); setDesc(''); setUrl(''); setPdf(''); setOrder('1'); setRequired('חובה'); setShowForm(false); onRefresh(); }
+    catch (err) { toast.error('שגיאה ביצירה: ' + (err instanceof Error ? err.message : String(err))); } finally { setSaving(false); }
   };
 
   const handleDelete = async (id: string) => {
