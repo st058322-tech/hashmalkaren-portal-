@@ -1071,7 +1071,7 @@ export default function AdminPage() {
               <Input placeholder="חיפוש עובד..." value={search} onChange={e => setSearch(e.target.value)} className="pr-10 bg-card" />
             </div>
             <div className="space-y-2.5">
-              {filtered.map(emp => <EmployeeRow key={emp.id} emp={emp} quizAttempts={quizAttempts} onRefresh={loadData} />)}
+              {filtered.map(emp => <EmployeeRow key={emp.id} emp={emp} quizAttempts={quizAttempts} onRefresh={() => adminCreds && refreshEmployees(adminCreds.user, adminCreds.pass)} />)}
               {filtered.length === 0 && <Card className="p-10 text-center"><p className="text-muted-foreground text-sm">לא נמצאו עובדים</p></Card>}
             </div>
           </>
