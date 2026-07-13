@@ -219,6 +219,9 @@ export default function TopicPage() {
   useEffect(() => {
     if (!emp) { navigate('/'); return; }
     loadVideos();
+    const onVisible = () => { if (!document.hidden) loadVideos(); };
+    document.addEventListener('visibilitychange', onVisible);
+    return () => document.removeEventListener('visibilitychange', onVisible);
   }, []);
 
   if (!emp) return null;
