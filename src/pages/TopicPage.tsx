@@ -96,7 +96,7 @@ function ActiveVideoCard({ video, topicId, onCompleted }: { video: Video; topicI
             <p className="text-xs text-muted-foreground leading-relaxed">{video.description}</p>
           )}
           {video.videoUrl && (
-            <VideoEmbed url={video.videoUrl} onWatchComplete={!markedDone ? handleWatchComplete : undefined} compact />
+            <VideoEmbed url={video.videoUrl} onWatchComplete={!markedDone ? handleWatchComplete : undefined} />
           )}
           {video.pdfUrl && (
             <a href={video.pdfUrl} target="_blank" rel="noopener noreferrer"
