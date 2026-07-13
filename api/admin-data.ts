@@ -21,27 +21,40 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   ]);
 
   const result = employees.map(emp => {
-    const empProgress = progress.filter(p => fLink(p, FIELDS.progress.employeeId) === emp.id);
-    const completedIds = new Set(
+    const empProgress = progress.filter(p => {
+      const linked = p.fields[FIELDS.progress.employeeId];
+      return Array.isArray(linked) ? linked.includes(emp.id) : fLink(p, FIELDS.progress.employeeId) === emp.id;
+    });
+    const completedVideoIds = new Set(
       empProgress
         .filter(p => fStr(p, FIELDS.progress.status) === 'הושלם')
-        .map(p => fLink(p, FIELDS.progress.videoId))
+        .map(p => {
+          const linked = p.fields[FIELDS.progress.videoId];
+          return Array.isArray(linked) ? linked[0] : fLink(p, FIELDS.progress.videoId);
+        })
         .filter(Boolean)
     );
 
     const topicData = topics.map(topic => {
       const topicVids = videos.filter(v => {
         if (fStr(v, FIELDS.videos.status) === 'לא פעיל') return false;
-        return fLink(v, FIELDS.videos.topicId) === topic.id;
+        const linked = v.fields[FIELDS.videos.topicId];
+        return Array.isArray(linked) ? linked.includes(topic.id) : fLink(v, FIELDS.videos.topicId) === topic.id;
       });
+      const completed = topicVids.filter(v => completedVideoIds.has(v.id));
+      const missing   = topicVids.filter(v => !completedVideoIds.has(v.id));
       return {
+        topicId: topic.id,
         name: fStr(topic, FIELDS.topics.name),
         total: topicVids.length,
-        completed: topicVids.filter(v => completedIds.has(v.id)).length,
-        completedNames: topicVids.filter(v => completedIds.has(v.id)).map(v => fStr(v, FIELDS.videos.name)),
-        missingNames: topicVids.filter(v => !completedIds.has(v.id)).map(v => fStr(v, FIELDS.videos.name)),
+        completed: completed.length,
+        completedVideos: completed.map(v => ({ id: v.id, name: fStr(v, FIELDS.videos.name) })),
+        missingVideos:   missing.map(v =>   ({ id: v.id, name: fStr(v, FIELDS.videos.name) })),
+        // kept for backwards-compat
+        completedNames: completed.map(v => fStr(v, FIELDS.videos.name)),
+        missingNames:   missing.map(v =>   fStr(v, FIELDS.videos.name)),
       };
-    });
+    }).filter(t => t.total > 0);
 
     return {
       id: emp.id,
