@@ -123,12 +123,26 @@ function QuizAttemptRow({ attempt, index }: { attempt: QuizAttempt; index: numbe
   );
 }
 
-function EmployeeRow({ emp, quizAttempts }: { emp: Employee; quizAttempts: QuizAttempt[] }) {
+function EmployeeRow({ emp, quizAttempts, onRefresh }: { emp: Employee; quizAttempts: QuizAttempt[]; onRefresh: () => void }) {
   const [open, setOpen] = useState(false);
+  const [marking, setMarking] = useState<string | null>(null); // videoId being marked
   const totalAll = emp.topics.reduce((s, t) => s + t.total, 0);
   const completedAll = emp.topics.reduce((s, t) => s + t.completed, 0);
   const pct = totalAll > 0 ? Math.round((completedAll / totalAll) * 100) : 0;
   const empQuizzes = quizAttempts.filter(q => q.employeeId === emp.id);
+
+  const handleMarkWatched = async (videoId: string, topicId: string, videoName: string) => {
+    setMarking(videoId);
+    try {
+      await markComplete({ employeeId: emp.id, videoId, topicId });
+      toast.success(`"${videoName}" סומן כנצפה עבור ${emp.name}`);
+      onRefresh();
+    } catch (err) {
+      toast.error('שגיאה בסימון: ' + (err instanceof Error ? err.message : String(err)));
+    } finally {
+      setMarking(null);
+    }
+  };
 
   return (
     <Card className="overflow-hidden">
@@ -151,20 +165,63 @@ function EmployeeRow({ emp, quizAttempts }: { emp: Employee; quizAttempts: QuizA
           {open ? <ChevronUp className="w-3.5 h-3.5 text-muted-foreground" /> : <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />}
         </div>
       </button>
+
       {open && (
-        <div className="px-3 sm:px-4 pb-4 border-t border-border pt-3 space-y-3">
+        <div className="px-3 sm:px-4 pb-4 border-t border-border pt-3 space-y-4">
           {emp.topics.map(topic => (
-            <div key={topic.name}>
-              <div className="text-xs font-medium mb-1">{topic.name} ({topic.completed}/{topic.total})</div>
-              <div className="flex flex-wrap gap-1">
-                {topic.completedNames.map(n => <Badge key={n} className="bg-emerald-600/20 text-emerald-400 border-emerald-600/30 text-[10px]"><CheckCircle2 className="w-3 h-3 ml-1" />{n}</Badge>)}
-                {topic.missingNames.map(n => <Badge key={n} variant="secondary" className="text-[10px] text-muted-foreground"><XCircle className="w-3 h-3 ml-1" />{n}</Badge>)}
+            <div key={topic.topicId ?? topic.name}>
+              <div className="text-xs font-bold mb-2 flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-primary" />
+                {topic.name}
+                <span className="text-muted-foreground font-normal">({topic.completed}/{topic.total})</span>
               </div>
+
+              {/* Completed videos */}
+              {(topic.completedVideos ?? []).length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-2">
+                  {(topic.completedVideos ?? topic.completedNames.map(n => ({ id: n, name: n }))).map(v => (
+                    <Badge key={v.id} className="bg-emerald-600/15 text-emerald-600 border-emerald-600/25 text-[10px] h-6 px-2">
+                      <CheckCircle2 className="w-3 h-3 ml-1" />{v.name}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+
+              {/* Missing videos — with mark-as-watched button */}
+              {(topic.missingVideos ?? []).length > 0 && (
+                <div className="space-y-1">
+                  {(topic.missingVideos ?? topic.missingNames.map(n => ({ id: n, name: n }))).map(v => (
+                    <div key={v.id} className="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg bg-secondary/40">
+                      <div className="flex items-center gap-1.5 min-w-0">
+                        <XCircle className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+                        <span className="text-xs text-muted-foreground truncate">{v.name}</span>
+                      </div>
+                      <button
+                        onClick={() => handleMarkWatched(v.id, topic.topicId, v.name)}
+                        disabled={marking === v.id}
+                        className="flex items-center gap-1 px-2.5 py-1 rounded-md bg-primary/10 hover:bg-primary/20 text-primary text-[11px] font-medium transition-colors shrink-0 disabled:opacity-50"
+                      >
+                        {marking === v.id
+                          ? <Loader2 className="w-3 h-3 animate-spin" />
+                          : <Eye className="w-3 h-3" />}
+                        סמן כנצפה
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {topic.total === 0 && (
+                <p className="text-xs text-muted-foreground">אין סרטונים בנושא זה</p>
+              )}
             </div>
           ))}
+
           {empQuizzes.length > 0 && (
             <div>
-              <div className="text-xs font-medium mb-1 flex items-center gap-1"><ClipboardCheck className="w-3 h-3 text-primary" />תוצאות מבחנים</div>
+              <div className="text-xs font-bold mb-1.5 flex items-center gap-1.5">
+                <ClipboardCheck className="w-3.5 h-3.5 text-primary" />תוצאות מבחנים
+              </div>
               <div className="space-y-1.5">
                 {empQuizzes.map((q, i) => <QuizAttemptRow key={q.id} attempt={q} index={i + 1} />)}
               </div>
