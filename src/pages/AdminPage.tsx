@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
-  adminData, getManageData, createTopic, createVideo, createQuestions,
+  adminData, getManageData, createTopic, updateTopic, deleteTopic,
+  createVideo, updateVideo, deleteVideo, createQuestions,
   updateQuestion, deleteQuestion, createEmployee, updateEmployee, deleteEmployee,
   type AdminDataOutputType, type GetManageDataOutputType, type AdminEmployee,
 } from '../lib/api';
