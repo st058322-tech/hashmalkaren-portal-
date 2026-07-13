@@ -52,7 +52,7 @@ function SidebarContent({
           return (
             <button
               key={item.tab}
-              onClick={() => { setTab(item.tab); onNav(); }}
+              onClick={() => { setTab(item.tab); navigate('/home'); onNav(); }}
               className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all text-right
                 ${active
                   ? 'bg-primary text-white shadow-md shadow-primary/25'
