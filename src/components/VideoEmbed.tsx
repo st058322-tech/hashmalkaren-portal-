@@ -8,7 +8,7 @@ function getEmbedInfo(url: string): { embedUrl: string; type: 'youtube' | 'vimeo
   const vimeoMatch = url.match(/vimeo\.com\/(?:video\/)?(\d+)/);
   if (vimeoMatch) return { embedUrl: `https://player.vimeo.com/video/${vimeoMatch[1]}?api=1`, type: 'vimeo' };
   const driveMatch = url.match(/drive\.google\.com\/file\/d\/([\w-]+)/);
-  if (driveMatch) return { embedUrl: `https://drive.google.com/file/d/${driveMatch[1]}/preview`, type: 'drive' };
+  if (driveMatch) return { embedUrl: `https://drive.google.com/file/d/${driveMatch[1]}/preview?rm=minimal`, type: 'drive' };
   if (url.match(/\.(mp4|webm|ogg)(\?|$)/i)) return { embedUrl: url, type: 'raw' };
   return { embedUrl: url, type: 'raw' };
 }
