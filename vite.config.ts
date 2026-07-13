@@ -288,13 +288,35 @@ export default defineConfig(({ mode }) => {
                 });
               }
 
-              if (route === 'create-topic') {
-                const rec = await CREATE(TABLES.topics, { [F.topic.name]: body.name, [F.topic.description]: body.description, [F.topic.status]: 'פעיל' });
-                return jsonReply(res, { id: (rec as unknown as AirRec).id });
+              if (route === 'manage-topic') {
+                const { action, id, name, description, status } = body as Record<string, string>;
+                if (action === 'create') {
+                  const rec = await CREATE(TABLES.topics, { [F.topic.name]: name, [F.topic.description]: description || '', [F.topic.status]: status || 'פעיל' });
+                  return jsonReply(res, { id: (rec as unknown as AirRec).id, success: true });
+                }
+                if (action === 'update') {
+                  await UPDATE(TABLES.topics, id, { [F.topic.name]: name, [F.topic.description]: description || '', [F.topic.status]: status || 'פעיל' });
+                  return jsonReply(res, { success: true });
+                }
+                if (action === 'delete') {
+                  await airFetch(AT_KEY, AT_BASE, `/${TABLES.topics}/${id}`, { method: 'DELETE' });
+                  return jsonReply(res, { success: true });
+                }
               }
-              if (route === 'create-video') {
-                const rec = await CREATE(TABLES.videos, { [F.video.name]: body.name, [F.video.topicId]: [body.topicId], [F.video.videoUrl]: body.videoUrl, [F.video.pdfUrl]: body.pdfUrl, [F.video.required]: body.required, [F.video.status]: 'פעיל', [F.video.order]: body.order });
-                return jsonReply(res, { id: (rec as unknown as AirRec).id });
+              if (route === 'manage-video') {
+                const { action, id, name, topicId, description, videoUrl, pdfUrl, required, status, order } = body as Record<string, string>;
+                if (action === 'create') {
+                  const rec = await CREATE(TABLES.videos, { [F.video.name]: name, [F.video.topicId]: [topicId], [F.video.description]: description || '', [F.video.videoUrl]: videoUrl || '', [F.video.pdfUrl]: pdfUrl || '', [F.video.required]: required || 'חובה', [F.video.status]: status || 'פעיל', [F.video.order]: Number(order) || 1 });
+                  return jsonReply(res, { id: (rec as unknown as AirRec).id, success: true });
+                }
+                if (action === 'update') {
+                  await UPDATE(TABLES.videos, id, { [F.video.name]: name, [F.video.description]: description || '', [F.video.videoUrl]: videoUrl || '', [F.video.pdfUrl]: pdfUrl || '', [F.video.required]: required || 'חובה', [F.video.status]: status || 'פעיל', [F.video.order]: Number(order) || 1 });
+                  return jsonReply(res, { success: true });
+                }
+                if (action === 'delete') {
+                  await airFetch(AT_KEY, AT_BASE, `/${TABLES.videos}/${id}`, { method: 'DELETE' });
+                  return jsonReply(res, { success: true });
+                }
               }
               if (route === 'create-questions') {
                 const questions = body.questions as Array<{ topicId: string; question: string; answer1: string; answer2: string; answer3: string; answer4?: string; correctAnswer: number }>;
