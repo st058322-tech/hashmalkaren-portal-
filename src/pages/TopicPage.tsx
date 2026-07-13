@@ -296,6 +296,8 @@ export default function TopicPage() {
             )}
           </div>
         )}
+
+        {!loading && emp && id && <TopicQuizResults empId={emp.id} topicId={id} />}
       </div>
     </div>
   );
