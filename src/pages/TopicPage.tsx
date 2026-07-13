@@ -132,6 +132,78 @@ function ActiveVideoCard({ video, topicId, onCompleted }: { video: Video; topicI
   );
 }
 
+function QuizAnswerRow({ a, i }: { a: QuizAnswer; i: number }) {
+  return (
+    <div className={`p-2.5 rounded-lg border text-xs ${a.isCorrect ? 'border-emerald-500/20 bg-emerald-500/5' : 'border-destructive/20 bg-destructive/5'}`}>
+      <div className="flex items-start gap-2 mb-1">
+        {a.isCorrect ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0 mt-0.5" /> : <XCircle className="w-3.5 h-3.5 text-destructive shrink-0 mt-0.5" />}
+        <p className="font-medium">{i + 1}. {a.question}</p>
+      </div>
+      <div className="mr-5 space-y-0.5">
+        {!a.isCorrect && <p className="text-destructive">תשובתך: {a.answers[a.selectedAnswer - 1]}</p>}
+        <p className="text-emerald-500">תשובה נכונה: {a.answers[a.correctAnswer - 1]}</p>
+      </div>
+    </div>
+  );
+}
+
+function TopicQuizResults({ empId, topicId }: { empId: string; topicId: string }) {
+  const [open, setOpen] = useState<string | null>(null);
+  const attempts = getAttemptsByEmployee(empId, topicId);
+  if (attempts.length === 0) return null;
+
+  const best = Math.max(...attempts.map(a => a.score));
+  const passed = attempts.some(a => a.passed);
+
+  return (
+    <div className="mt-4">
+      <div className="flex items-center gap-2 mb-2">
+        <ClipboardCheck className="w-4 h-4 text-primary" />
+        <h2 className="text-sm font-bold">תוצאות המבחן שלי</h2>
+        <Badge variant="outline" className={`text-[10px] mr-auto ${passed ? 'border-emerald-500/30 text-emerald-500' : 'border-destructive/30 text-destructive'}`}>
+          {passed ? 'עברת ✓' : 'טרם עברת'}
+        </Badge>
+      </div>
+      <Card className="p-3 space-y-2">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1">
+          <span>{attempts.length} ניסיונות</span>
+          <span>•</span>
+          <span>ציון מקסימלי: <strong className="text-primary">{best}</strong></span>
+        </div>
+        {[...attempts].reverse().map((attempt, idx) => (
+          <div key={attempt.id}>
+            <button
+              onClick={() => setOpen(open === attempt.id ? null : attempt.id)}
+              className="w-full flex items-center justify-between p-2 rounded-lg bg-secondary/40 hover:bg-secondary/70 transition-colors text-right"
+            >
+              <div className="flex items-center gap-2">
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-black text-sm ${attempt.passed ? 'bg-emerald-500/15 text-emerald-500' : 'bg-destructive/10 text-destructive'}`}>
+                  {attempt.score}
+                </div>
+                <div>
+                  <p className="text-xs font-medium">ניסיון {attempts.length - idx}</p>
+                  <p className="text-[10px] text-muted-foreground">{attempt.date} • {attempt.correct}/{attempt.total} נכונות</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Badge variant="outline" className={`text-[10px] h-5 ${attempt.passed ? 'border-emerald-500/30 text-emerald-500' : 'border-destructive/30 text-destructive'}`}>
+                  {attempt.passed ? 'עבר' : 'לא עבר'}
+                </Badge>
+                <ChevronLeft className={`w-3.5 h-3.5 text-muted-foreground transition-transform ${open === attempt.id ? 'rotate-90' : ''}`} />
+              </div>
+            </button>
+            {open === attempt.id && attempt.answers.length > 0 && (
+              <div className="mt-1.5 space-y-1.5 pr-2">
+                {attempt.answers.map((a, i) => <QuizAnswerRow key={i} a={a} i={i} />)}
+              </div>
+            )}
+          </div>
+        ))}
+      </Card>
+    </div>
+  );
+}
+
 export default function TopicPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
