@@ -176,23 +176,34 @@ export default function TopicPage() {
           </Card>
         )}
 
-        {!loading && (
-          <Card className="p-4 mb-4 border-primary/30 bg-primary/5">
+        {!loading && pct === 100 && (
+          <Card className="p-4 mb-4 border-emerald-500/30 bg-emerald-500/5">
             <div className="flex items-center justify-between gap-3">
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center shrink-0">
-                  <ClipboardCheck className="w-5 h-5 text-primary" />
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/20 flex items-center justify-center shrink-0">
+                  <ClipboardCheck className="w-5 h-5 text-emerald-600" />
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs text-primary font-semibold">
-                    {pct === 100 ? 'סיימת את כל הסרטונים!' : 'שאלון לנושא זה'}
-                  </p>
-                  <p className="text-sm font-bold">בדוק את הידע שלך במבחן</p>
+                  <p className="text-xs text-emerald-600 font-semibold">סיימת את כל הסרטונים!</p>
+                  <p className="text-sm font-bold">עכשיו תוכלי לגשת לשאלון</p>
                 </div>
               </div>
               <Button size="sm" onClick={() => navigate(`/quiz/${id}`)} className="bg-primary text-primary-foreground h-9 px-4 shrink-0 font-bold text-xs">
-                לבחינה
+                לשאלון
               </Button>
+            </div>
+          </Card>
+        )}
+        {!loading && pct < 100 && videos.length > 0 && (
+          <Card className="p-4 mb-4 border-border bg-secondary/20">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center shrink-0">
+                <ClipboardCheck className="w-5 h-5 text-muted-foreground" />
+              </div>
+              <div>
+                <p className="text-xs text-muted-foreground font-semibold">השאלון נעול</p>
+                <p className="text-sm text-muted-foreground">יש לצפות בכל הסרטונים כדי לגשת לשאלון</p>
+              </div>
             </div>
           </Card>
         )}
