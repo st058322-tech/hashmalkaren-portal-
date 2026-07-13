@@ -303,77 +303,11 @@ function DataManagement() {
       </div>
 
       {subTab === 'topics' && (
-        <>
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold">נושאי הדרכה</h3>
-            <Button size="sm" onClick={() => setShowForm(!showForm)} className="h-8 text-xs bg-primary text-primary-foreground"><Plus className="w-3.5 h-3.5 ml-1" />נושא חדש</Button>
-          </div>
-          {showForm && (
-            <Card className="p-4 space-y-3 border-primary/20">
-              <Input placeholder="שם נושא" value={topicName} onChange={e => setTopicName(e.target.value)} className="bg-secondary/50" />
-              <Textarea placeholder="תיאור" value={topicDesc} onChange={e => setTopicDesc(e.target.value)} className="bg-secondary/50" rows={2} />
-              <Select value={topicStatus} onValueChange={setTopicStatus}>
-                <SelectTrigger className="bg-secondary/50"><SelectValue /></SelectTrigger>
-                <SelectContent><SelectItem value="פעיל">פעיל</SelectItem><SelectItem value="לא פעיל">לא פעיל</SelectItem></SelectContent>
-              </Select>
-              <Button onClick={handleCreateTopic} disabled={saving || !topicName} className="w-full bg-primary text-primary-foreground">{saving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Plus className="w-4 h-4 ml-2" />}צור נושא</Button>
-            </Card>
-          )}
-          <div className="space-y-2">
-            {data.topics.map(t => (
-              <Card key={t.id} className="p-3 flex items-center justify-between">
-                <div><p className="text-sm font-medium">{t.name}</p>{t.description && <p className="text-[11px] text-muted-foreground">{t.description}</p>}</div>
-                <Badge variant="outline" className={`text-[10px] ${t.status === 'פעיל' ? 'text-emerald-400 border-emerald-500/30' : 'text-muted-foreground'}`}>{t.status}</Badge>
-              </Card>
-            ))}
-          </div>
-        </>
+        <TopicsTab topics={data.topics} onRefresh={loadData} />
       )}
 
       {subTab === 'videos' && (
-        <>
-          <div className="flex items-center justify-between">
-            <h3 className="text-sm font-bold">סרטוני הדרכה</h3>
-            <Button size="sm" onClick={() => setShowForm(!showForm)} className="h-8 text-xs bg-primary text-primary-foreground"><Plus className="w-3.5 h-3.5 ml-1" />סרטון חדש</Button>
-          </div>
-          {showForm && (
-            <Card className="p-4 space-y-3 border-primary/20">
-              <Select value={videoTopic} onValueChange={setVideoTopic}>
-                <SelectTrigger className="bg-secondary/50"><SelectValue placeholder="בחר נושא" /></SelectTrigger>
-                <SelectContent>{topics.map(t => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}</SelectContent>
-              </Select>
-              <Input placeholder="שם סרטון" value={videoName} onChange={e => setVideoName(e.target.value)} className="bg-secondary/50" />
-              <Textarea placeholder="תיאור קצר" value={videoDesc} onChange={e => setVideoDesc(e.target.value)} className="bg-secondary/50" rows={2} />
-              <Input placeholder="קישור לסרטון" value={videoUrl} onChange={e => setVideoUrl(e.target.value)} className="bg-secondary/50" />
-              <Input placeholder="קישור ל-PDF (אופציונלי)" value={videoPdf} onChange={e => setVideoPdf(e.target.value)} className="bg-secondary/50" />
-              <div className="grid grid-cols-2 gap-3">
-                <div><Label className="text-xs">סדר הצגה</Label><Input type="number" value={videoOrder} onChange={e => setVideoOrder(e.target.value)} className="bg-secondary/50 mt-1" /></div>
-                <div><Label className="text-xs">חובה / רשות</Label>
-                  <Select value={videoRequired} onValueChange={setVideoRequired}><SelectTrigger className="bg-secondary/50 mt-1"><SelectValue /></SelectTrigger>
-                    <SelectContent><SelectItem value="חובה">חובה</SelectItem><SelectItem value="רשות">רשות</SelectItem></SelectContent></Select>
-                </div>
-              </div>
-              <Button onClick={handleCreateVideo} disabled={saving || !videoName || !videoTopic} className="w-full bg-primary text-primary-foreground">{saving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Plus className="w-4 h-4 ml-2" />}צור סרטון</Button>
-            </Card>
-          )}
-          <div className="space-y-2">
-            {data.videos.map(v => {
-              const tName = topics.find(t => t.id === v.topicId)?.name || '';
-              return (
-                <Card key={v.id} className="p-3">
-                  <div className="flex items-center justify-between mb-1">
-                    <p className="text-sm font-medium">{v.name}</p>
-                    <div className="flex gap-1">
-                      <Badge variant="secondary" className="text-[10px]">{v.required}</Badge>
-                      <Badge variant="outline" className={`text-[10px] ${v.status === 'פעיל' ? 'text-emerald-400 border-emerald-500/30' : 'text-muted-foreground'}`}>{v.status}</Badge>
-                    </div>
-                  </div>
-                  <p className="text-[11px] text-muted-foreground">{tName} • סדר: {v.order}</p>
-                </Card>
-              );
-            })}
-          </div>
-        </>
+        <VideosTab videos={data.videos} topics={data.topics} onRefresh={loadData} />
       )}
 
       {subTab === 'questions' && (
