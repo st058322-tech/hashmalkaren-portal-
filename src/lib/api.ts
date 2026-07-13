@@ -105,10 +105,22 @@ export const getManageData = (_input: Record<string, never>) =>
   post<GetManageDataOutputType>('/api/get-manage-data', {});
 
 export const createTopic = (input: { name: string; description?: string; status?: string }) =>
-  post<{ id: string; success: boolean }>('/api/create-topic', input);
+  post<{ id: string; success: boolean }>('/api/manage-topic', { action: 'create', ...input });
+
+export const updateTopic = (input: { id: string; name: string; description?: string; status?: string }) =>
+  post<{ success: boolean }>('/api/manage-topic', { action: 'update', ...input });
+
+export const deleteTopic = (id: string) =>
+  post<{ success: boolean }>('/api/manage-topic', { action: 'delete', id });
 
 export const createVideo = (input: { topicId: string; name: string; description?: string; videoUrl?: string; pdfUrl?: string; order?: number; required?: string; status?: string }) =>
-  post<{ id: string; success: boolean }>('/api/create-video', input);
+  post<{ id: string; success: boolean }>('/api/manage-video', { action: 'create', ...input });
+
+export const updateVideo = (input: { id: string; name: string; description?: string; videoUrl?: string; pdfUrl?: string; order?: number; required?: string; status?: string }) =>
+  post<{ success: boolean }>('/api/manage-video', { action: 'update', ...input });
+
+export const deleteVideo = (id: string) =>
+  post<{ success: boolean }>('/api/manage-video', { action: 'delete', id });
 
 export const createQuestions = (input: { questions: Array<{ topicId: string; question: string; answer1: string; answer2: string; answer3: string; answer4?: string; correctAnswer: number }> }) =>
   post<{ count: number; success: boolean }>('/api/create-questions', input);
