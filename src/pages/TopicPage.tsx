@@ -236,9 +236,14 @@ export default function TopicPage() {
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 pt-3 pb-10 max-w-3xl">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/home')} className="mb-2 text-xs text-muted-foreground hover:text-foreground h-8 px-2 -mr-2">
-          <ArrowRight className="w-3.5 h-3.5 ml-1" />חזרה לנושאים
-        </Button>
+        <div className="flex items-center justify-between mb-2">
+          <Button variant="ghost" size="sm" onClick={() => navigate('/home')} className="text-xs text-muted-foreground hover:text-foreground h-8 px-2 -mr-2">
+            <ArrowRight className="w-3.5 h-3.5 ml-1" />חזרה לנושאים
+          </Button>
+          <Button variant="ghost" size="sm" onClick={loadVideos} className="text-xs text-muted-foreground hover:text-foreground h-8 px-2 gap-1">
+            <RefreshCw className="w-3 h-3" />רענן
+          </Button>
+        </div>
 
         {!loading && videos.length > 0 && (
           <Card className="p-4 mb-4 border-primary/20 bg-gradient-to-bl from-primary/[0.06] to-transparent">
