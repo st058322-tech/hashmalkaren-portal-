@@ -27,10 +27,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   let prevDone = true;
   const result = sorted.map(v => {
-    const prog = progress.find(p => {
+    const progs = progress.filter(p => {
       const linked = p.fields[FIELDS.progress.videoId];
       return Array.isArray(linked) ? linked.includes(v.id) : fLink(p, FIELDS.progress.videoId) === v.id;
     });
+    // Prefer completed record if duplicates exist (e.g. admin-marked over in-progress)
+    const prog = progs.find(p => fStr(p, FIELDS.progress.status) === 'הושלם') ?? progs[0];
     const status = prog ? fStr(prog, FIELDS.progress.status) : 'טרם התחיל';
     const done = status === 'הושלם';
     const locked = !prevDone;
