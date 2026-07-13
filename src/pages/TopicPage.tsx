@@ -228,7 +228,7 @@ export default function TopicPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 pt-3 pb-10 max-w-xl">
+      <div className="container mx-auto px-4 pt-3 pb-10 max-w-3xl">
         <Button variant="ghost" size="sm" onClick={() => navigate('/home')} className="mb-2 text-xs text-muted-foreground hover:text-foreground h-8 px-2 -mr-2">
           <ArrowRight className="w-3.5 h-3.5 ml-1" />חזרה לנושאים
         </Button>
