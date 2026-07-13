@@ -17,10 +17,11 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import {
   Users, Search, CheckCircle2, XCircle, ChevronDown, ChevronUp, Lock, Loader2,
   ClipboardCheck, Plus, BookOpen, Video, HelpCircle, FileSpreadsheet,
-  Settings, Pencil, Trash2, UserPlus,
+  Settings, Pencil, Trash2, UserPlus, Eye,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { getAllQuizResults, QuizAttempt, QuizAnswer } from '../lib/quizResults';
+import { markComplete } from '../lib/api';
 
 type Employee = AdminDataOutputType['employees'][0];
 type ManageData = GetManageDataOutputType;
