@@ -319,6 +319,255 @@ function DataManagement() {
 
 type QuestionItem = GetManageDataOutputType['questions'][0];
 type TopicItem = GetManageDataOutputType['topics'][0];
+type VideoItem = GetManageDataOutputType['videos'][0];
+
+// ── Topics Tab ────────────────────────────────────────────
+function TopicsTab({ topics, onRefresh }: { topics: TopicItem[]; onRefresh: () => void }) {
+  const [showForm, setShowForm] = useState(false);
+  const [editT, setEditT] = useState<TopicItem | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [name, setName] = useState('');
+  const [desc, setDesc] = useState('');
+  const [status, setStatus] = useState('פעיל');
+
+  const handleCreate = async () => {
+    if (!name) return;
+    setSaving(true);
+    try { await createTopic({ name, description: desc, status }); toast.success('נושא נוצר'); setName(''); setDesc(''); setStatus('פעיל'); setShowForm(false); onRefresh(); }
+    catch { toast.error('שגיאה ביצירה'); } finally { setSaving(false); }
+  };
+
+  const handleDelete = async (id: string) => {
+    setSaving(true);
+    try { await deleteTopic(id); toast.success('נושא נמחק'); setDeleteId(null); onRefresh(); }
+    catch { toast.error('שגיאה במחיקה'); } finally { setSaving(false); }
+  };
+
+  return (
+    <>
+      {editT && (
+        <EditTopicDialog topic={editT} onSave={() => { setEditT(null); onRefresh(); }} onClose={() => setEditT(null)} />
+      )}
+      <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader><DialogTitle className="text-right text-destructive">מחיקת נושא</DialogTitle></DialogHeader>
+          <p className="text-sm text-muted-foreground mt-2">האם למחוק נושא זה? כל הסרטונים והשאלות שלו יישארו אך יאבדו את הקישור.</p>
+          <div className="flex gap-2 mt-4">
+            <Button variant="outline" onClick={() => setDeleteId(null)} className="flex-1">ביטול</Button>
+            <Button onClick={() => deleteId && handleDelete(deleteId)} disabled={saving} className="flex-1 bg-destructive text-destructive-foreground">
+              {saving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Trash2 className="w-4 h-4 ml-2" />}מחק
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <div className="flex items-center justify-between">
+        <h3 className="text-sm font-bold">נושאי הדרכה</h3>
+        <Button size="sm" onClick={() => setShowForm(!showForm)} className="h-8 text-xs bg-primary text-primary-foreground"><Plus className="w-3.5 h-3.5 ml-1" />נושא חדש</Button>
+      </div>
+      {showForm && (
+        <Card className="p-4 space-y-3 border-primary/20">
+          <Input placeholder="שם נושא" value={name} onChange={e => setName(e.target.value)} className="bg-secondary/50" />
+          <Textarea placeholder="תיאור" value={desc} onChange={e => setDesc(e.target.value)} className="bg-secondary/50" rows={2} />
+          <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger className="bg-secondary/50"><SelectValue /></SelectTrigger>
+            <SelectContent><SelectItem value="פעיל">פעיל</SelectItem><SelectItem value="לא פעיל">לא פעיל</SelectItem></SelectContent>
+          </Select>
+          <Button onClick={handleCreate} disabled={saving || !name} className="w-full bg-primary text-primary-foreground">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Plus className="w-4 h-4 ml-2" />}צור נושא
+          </Button>
+        </Card>
+      )}
+      <div className="space-y-2">
+        {topics.map(t => (
+          <Card key={t.id} className="p-3 flex items-center justify-between gap-3">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium truncate">{t.name}</p>
+              {t.description && <p className="text-[11px] text-muted-foreground truncate">{t.description}</p>}
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <Badge variant="outline" className={`text-[10px] ${t.status === 'פעיל' ? 'text-emerald-400 border-emerald-500/30' : 'text-muted-foreground'}`}>{t.status}</Badge>
+              <button onClick={() => setEditT(t)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-primary transition-colors"><Pencil className="w-3.5 h-3.5" /></button>
+              <button onClick={() => setDeleteId(t.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </>
+  );
+}
+
+function EditTopicDialog({ topic, onSave, onClose }: { topic: TopicItem; onSave: () => void; onClose: () => void }) {
+  const [name, setName] = useState(topic.name);
+  const [desc, setDesc] = useState(topic.description || '');
+  const [status, setStatus] = useState(topic.status || 'פעיל');
+  const [saving, setSaving] = useState(false);
+  const handleSave = async () => {
+    setSaving(true);
+    try { await updateTopic({ id: topic.id, name, description: desc, status }); toast.success('נושא עודכן'); onSave(); }
+    catch { toast.error('שגיאה בעדכון'); } finally { setSaving(false); }
+  };
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-sm">
+        <DialogHeader><DialogTitle className="text-right">עריכת נושא</DialogTitle></DialogHeader>
+        <div className="space-y-3 mt-2">
+          <Input value={name} onChange={e => setName(e.target.value)} placeholder="שם נושא" className="bg-secondary/50" />
+          <Textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="תיאור" className="bg-secondary/50" rows={2} />
+          <Select value={status} onValueChange={setStatus}>
+            <SelectTrigger className="bg-secondary/50"><SelectValue /></SelectTrigger>
+            <SelectContent><SelectItem value="פעיל">פעיל</SelectItem><SelectItem value="לא פעיל">לא פעיל</SelectItem></SelectContent>
+          </Select>
+          <div className="flex gap-2"><Button variant="outline" onClick={onClose} className="flex-1">ביטול</Button><Button onClick={handleSave} disabled={saving || !name} className="flex-1 bg-primary text-primary-foreground">{saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'שמור'}</Button></div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
+// ── Videos Tab ────────────────────────────────────────────
+function VideosTab({ videos, topics, onRefresh }: { videos: VideoItem[]; topics: TopicItem[]; onRefresh: () => void }) {
+  const [showForm, setShowForm] = useState(false);
+  const [editV, setEditV] = useState<VideoItem | null>(null);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [filterTopic, setFilterTopic] = useState('');
+  const [name, setName] = useState(''); const [topic, setTopic] = useState('');
+  const [desc, setDesc] = useState(''); const [url, setUrl] = useState('');
+  const [pdf, setPdf] = useState(''); const [order, setOrder] = useState('1');
+  const [required, setRequired] = useState('חובה');
+
+  const handleCreate = async () => {
+    if (!name || !topic) return;
+    setSaving(true);
+    try { await createVideo({ topicId: topic, name, description: desc, videoUrl: url, pdfUrl: pdf, order: Number(order)||1, required }); toast.success('סרטון נוצר'); setName(''); setTopic(''); setDesc(''); setUrl(''); setPdf(''); setOrder('1'); setRequired('חובה'); setShowForm(false); onRefresh(); }
+    catch { toast.error('שגיאה ביצירה'); } finally { setSaving(false); }
+  };
+
+  const handleDelete = async (id: string) => {
+    setSaving(true);
+    try { await deleteVideo(id); toast.success('סרטון נמחק'); setDeleteId(null); onRefresh(); }
+    catch { toast.error('שגיאה במחיקה'); } finally { setSaving(false); }
+  };
+
+  const filtered = filterTopic ? videos.filter(v => v.topicId === filterTopic) : videos;
+  const grouped = useMemo(() => {
+    const map = new Map<string, VideoItem[]>();
+    for (const v of filtered) {
+      const tName = topics.find(t => t.id === v.topicId)?.name || 'ללא נושא';
+      if (!map.has(tName)) map.set(tName, []);
+      map.get(tName)!.push(v);
+    }
+    return [...map.entries()];
+  }, [filtered, topics]);
+
+  return (
+    <>
+      {editV && <EditVideoDialog video={editV} topics={topics} onSave={() => { setEditV(null); onRefresh(); }} onClose={() => setEditV(null)} />}
+      <Dialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader><DialogTitle className="text-right text-destructive">מחיקת סרטון</DialogTitle></DialogHeader>
+          <p className="text-sm text-muted-foreground mt-2">האם למחוק סרטון זה? הנתיבי הצפייה של עובדים לסרטון זה יישמרו.</p>
+          <div className="flex gap-2 mt-4">
+            <Button variant="outline" onClick={() => setDeleteId(null)} className="flex-1">ביטול</Button>
+            <Button onClick={() => deleteId && handleDelete(deleteId)} disabled={saving} className="flex-1 bg-destructive text-destructive-foreground">
+              {saving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Trash2 className="w-4 h-4 ml-2" />}מחק
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+      <div className="flex items-center justify-between gap-2 flex-wrap">
+        <h3 className="text-sm font-bold">סרטוני הדרכה</h3>
+        <div className="flex gap-2">
+          <Select value={filterTopic} onValueChange={setFilterTopic}>
+            <SelectTrigger className="h-8 text-xs w-36 bg-secondary/50"><SelectValue placeholder="כל הנושאים" /></SelectTrigger>
+            <SelectContent><SelectItem value="">כל הנושאים</SelectItem>{topics.map(t => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}</SelectContent>
+          </Select>
+          <Button size="sm" onClick={() => setShowForm(!showForm)} className="h-8 text-xs bg-primary text-primary-foreground"><Plus className="w-3.5 h-3.5 ml-1" />סרטון חדש</Button>
+        </div>
+      </div>
+      {showForm && (
+        <Card className="p-4 space-y-3 border-primary/20">
+          <Select value={topic} onValueChange={setTopic}><SelectTrigger className="bg-secondary/50"><SelectValue placeholder="בחר נושא" /></SelectTrigger><SelectContent>{topics.map(t => <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>)}</SelectContent></Select>
+          <Input placeholder="שם סרטון" value={name} onChange={e => setName(e.target.value)} className="bg-secondary/50" />
+          <Textarea placeholder="תיאור קצר" value={desc} onChange={e => setDesc(e.target.value)} className="bg-secondary/50" rows={2} />
+          <Input placeholder="קישור לסרטון" value={url} onChange={e => setUrl(e.target.value)} className="bg-secondary/50" />
+          <Input placeholder="קישור ל-PDF (אופציונלי)" value={pdf} onChange={e => setPdf(e.target.value)} className="bg-secondary/50" />
+          <div className="grid grid-cols-2 gap-3">
+            <div><Label className="text-xs">סדר הצגה</Label><Input type="number" value={order} onChange={e => setOrder(e.target.value)} className="bg-secondary/50 mt-1" /></div>
+            <div><Label className="text-xs">חובה / רשות</Label><Select value={required} onValueChange={setRequired}><SelectTrigger className="bg-secondary/50 mt-1"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="חובה">חובה</SelectItem><SelectItem value="רשות">רשות</SelectItem></SelectContent></Select></div>
+          </div>
+          <Button onClick={handleCreate} disabled={saving || !name || !topic} className="w-full bg-primary text-primary-foreground">
+            {saving ? <Loader2 className="w-4 h-4 animate-spin ml-2" /> : <Plus className="w-4 h-4 ml-2" />}צור סרטון
+          </Button>
+        </Card>
+      )}
+      <div className="space-y-4">
+        {grouped.map(([tName, vids]) => (
+          <div key={tName}>
+            <p className="text-xs font-bold text-muted-foreground mb-1.5 px-1">{tName} ({vids.length})</p>
+            <div className="space-y-2">
+              {vids.sort((a,b) => a.order - b.order).map(v => (
+                <Card key={v.id} className="p-3 flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground w-5 shrink-0">{v.order}.</span>
+                      <p className="text-sm font-medium truncate">{v.name}</p>
+                    </div>
+                    <div className="flex gap-1.5 mt-1 mr-7">
+                      <Badge variant="secondary" className="text-[10px]">{v.required}</Badge>
+                      <Badge variant="outline" className={`text-[10px] ${v.status === 'פעיל' ? 'text-emerald-400 border-emerald-500/30' : 'text-muted-foreground'}`}>{v.status}</Badge>
+                    </div>
+                  </div>
+                  <div className="flex gap-1 shrink-0">
+                    <button onClick={() => setEditV(v)} className="p-1.5 rounded-lg hover:bg-secondary text-muted-foreground hover:text-primary transition-colors"><Pencil className="w-3.5 h-3.5" /></button>
+                    <button onClick={() => setDeleteId(v.id)} className="p-1.5 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"><Trash2 className="w-3.5 h-3.5" /></button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ))}
+        {videos.length === 0 && <Card className="p-8 text-center text-muted-foreground text-sm">אין סרטונים עדיין</Card>}
+      </div>
+    </>
+  );
+}
+
+function EditVideoDialog({ video, topics, onSave, onClose }: { video: VideoItem; topics: TopicItem[]; onSave: () => void; onClose: () => void }) {
+  const [name, setName] = useState(video.name);
+  const [desc, setDesc] = useState(video.description || '');
+  const [url, setUrl] = useState(video.videoUrl || '');
+  const [pdf, setPdf] = useState(video.pdfUrl || '');
+  const [order, setOrder] = useState(String(video.order || 1));
+  const [required, setRequired] = useState(video.required || 'חובה');
+  const [status, setStatus] = useState(video.status || 'פעיל');
+  const [saving, setSaving] = useState(false);
+  const handleSave = async () => {
+    setSaving(true);
+    try { await updateVideo({ id: video.id, name, description: desc, videoUrl: url, pdfUrl: pdf, order: Number(order)||1, required, status }); toast.success('סרטון עודכן'); onSave(); }
+    catch { toast.error('שגיאה בעדכון'); } finally { setSaving(false); }
+  };
+  return (
+    <Dialog open onOpenChange={onClose}>
+      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogHeader><DialogTitle className="text-right">עריכת סרטון</DialogTitle></DialogHeader>
+        <div className="space-y-3 mt-2">
+          <Input value={name} onChange={e => setName(e.target.value)} placeholder="שם סרטון" className="bg-secondary/50" />
+          <Textarea value={desc} onChange={e => setDesc(e.target.value)} placeholder="תיאור" className="bg-secondary/50" rows={2} />
+          <Input value={url} onChange={e => setUrl(e.target.value)} placeholder="קישור לסרטון" className="bg-secondary/50" />
+          <Input value={pdf} onChange={e => setPdf(e.target.value)} placeholder="קישור ל-PDF" className="bg-secondary/50" />
+          <div className="grid grid-cols-3 gap-3">
+            <div><Label className="text-xs">סדר</Label><Input type="number" value={order} onChange={e => setOrder(e.target.value)} className="bg-secondary/50 mt-1" /></div>
+            <div><Label className="text-xs">חובה/רשות</Label><Select value={required} onValueChange={setRequired}><SelectTrigger className="bg-secondary/50 mt-1"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="חובה">חובה</SelectItem><SelectItem value="רשות">רשות</SelectItem></SelectContent></Select></div>
+            <div><Label className="text-xs">סטטוס</Label><Select value={status} onValueChange={setStatus}><SelectTrigger className="bg-secondary/50 mt-1"><SelectValue /></SelectTrigger><SelectContent><SelectItem value="פעיל">פעיל</SelectItem><SelectItem value="לא פעיל">לא פעיל</SelectItem></SelectContent></Select></div>
+          </div>
+          <div className="flex gap-2"><Button variant="outline" onClick={onClose} className="flex-1">ביטול</Button><Button onClick={handleSave} disabled={saving || !name} className="flex-1 bg-primary text-primary-foreground">{saving ? <Loader2 className="w-4 h-4 animate-spin" /> : 'שמור'}</Button></div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
 function EditQuestionDialog({ q, topics, onSave, onClose }: { q: QuestionItem; topics: TopicItem[]; onSave: () => void; onClose: () => void }) {
   const [text, setText] = useState(q.question);
