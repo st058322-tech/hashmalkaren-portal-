@@ -272,7 +272,16 @@ export default defineConfig(({ mode }) => {
                       const tvids = videos.filter(v => fLink(v, F.video.topicId) === t.id);
                       const done = tvids.filter(v => completedVideoIds.has(v.id));
                       const missing = tvids.filter(v => !completedVideoIds.has(v.id));
-                      return { name: fStr(t, F.topic.name), total: tvids.length, completed: done.length, completedNames: done.map(v => fStr(v, F.video.name)), missingNames: missing.map(v => fStr(v, F.video.name)) };
+                      return {
+                        topicId: t.id,
+                        name: fStr(t, F.topic.name),
+                        total: tvids.length,
+                        completed: done.length,
+                        completedVideos: done.map(v => ({ id: v.id, name: fStr(v, F.video.name) })),
+                        missingVideos: missing.map(v => ({ id: v.id, name: fStr(v, F.video.name) })),
+                        completedNames: done.map(v => fStr(v, F.video.name)),
+                        missingNames: missing.map(v => fStr(v, F.video.name)),
+                      };
                     }),
                   };
                 });
