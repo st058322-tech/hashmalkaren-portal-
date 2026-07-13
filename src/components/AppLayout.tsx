@@ -182,7 +182,7 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
             return (
               <button
                 key={item.tab}
-                onClick={() => setTab(item.tab)}
+                onClick={() => { setTab(item.tab); navigate('/home'); }}
                 className="flex-1 flex flex-col items-center justify-center gap-0.5 relative"
               >
                 {active && (
